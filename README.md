@@ -27,7 +27,7 @@ src/
 
 ## Critical Security Fixes
 
-### 1. **setMerkleRoot Callable by Anyone** ✅ FIXED
+### 1. **setMerkleRoot Callable by Anyone**
 **Vulnerability**: The original function had no access control, allowing anyone to change the merkle root.
 
 **Fix**:
@@ -46,7 +46,7 @@ function proposeMerkleRoot(bytes32 root) external onlyOwner {
 - Enforced with 1-hour timelock before execution
 - Can only be called through a multisig transaction to self
 
-### 2. **emergencyWithdrawAll Public Drain** ✅ FIXED
+### 2. **emergencyWithdrawAll Public Drain**
 **Vulnerability**: The function was public with no access control, allowing anyone to drain the vault.
 
 **Fix**:
@@ -71,7 +71,7 @@ function proposeEmergencyWithdraw() external onlyOwner {
 - Requires multisig threshold (2 of 3 owners)
 - Protected by 1-hour timelock execution delay
 
-### 3. **pause/unpause Single Owner Control** ✅ FIXED
+### 3. **pause/unpause Single Owner Control**
 **Vulnerability**: Only a single owner could pause/unpause, creating a centralization risk.
 
 **Fix**:
@@ -95,7 +95,7 @@ function proposePause() external onlyOwner {
 - Requires N-of-M owner confirmations (configurable threshold)
 - Enforced with timelock protection
 
-### 4. **receive() Uses tx.origin** ✅ FIXED
+### 4. **receive() Uses tx.origin**
 **Vulnerability**: Using `tx.origin` instead of `msg.sender` can cause incorrect attribution through proxy calls.
 
 **Fix**:
@@ -110,7 +110,7 @@ receive() external payable {
 - Correctly attributes deposits to the actual caller
 - Prevents proxy-based attribution attacks
 
-### 5. **withdraw & claim Uses .transfer** ✅ FIXED
+### 5. **withdraw & claim Uses .transfer**
 **Vulnerability**: `.transfer()` only forwards 2300 gas, causing failures with smart contract recipients.
 
 **Fix**:
@@ -147,7 +147,7 @@ function claim(bytes32[] calldata proof, uint256 amount)
 - Forwards all remaining gas to recipient
 - Works with smart contract wallets
 
-### 6. **Timelock Execution Proper Implementation** ✅ VERIFIED
+### 6. **Timelock Execution Proper Implementation**
 **Status**: The original implementation was correct but improved with modular design.
 
 **Enhancement**:
@@ -170,10 +170,6 @@ All critical vulnerabilities have been tested with 12 comprehensive tests:
 6. **testUnpauseRequiresMultisig**: Confirms unpause requires multisig approval
 7. **testEmergencyWithdrawRequiresMultisig**: Verifies emergency function protection
 8. **testMerkleClaimUsesSafeCall**: Confirms claims use safe transfer
-9. **testTimelockEnforcement**: Verifies timelock delays are enforced
-10. **testOperationsBlockedWhenPaused**: Confirms pause functionality
-11. **testMultisigThresholdEnforcement**: Verifies threshold requirements
-12. **testOnlyOwnersCanSubmitTransactions**: Confirms owner-only submission
 
 ### Running Tests
 
@@ -183,8 +179,8 @@ forge test
 
 **Expected Output**:
 ```
-Ran 12 tests for test/EvictionVault.t.sol:EvictionVaultTest
-Suite result: ok. 12 passed; 0 failed; 0 skipped
+Ran 8 tests for test/EvictionVault.t.sol:EvictionVaultTest
+Suite result: ok. 8 passed; 0 failed; 0 skipped
 ```
 
 ### Building Contracts
@@ -194,16 +190,6 @@ forge build
 ```
 
 Compiles successfully without errors.
-
-## Security Best Practices Implemented
-
-1. **Checks-Effects-Interactions Pattern**: All functions follow proper ordering to prevent reentrancy
-2. **Access Control**: Role-based restrictions using owner mappings
-3. **State Validation**: Input validation and precondition checks throughout
-4. **Event Logging**: Comprehensive events for all state changes
-5. **Safe Math**: Solidity 0.8.20+ has built-in overflow/underflow protection
-6. **Gas Optimization**: Efficient storage layout and minimal SSTORE operations
-7. **Modularity**: Clean separation of concerns enabling future upgrades
 
 ## Deployment
 
@@ -226,15 +212,8 @@ EvictionVault vault = new EvictionVault{value: initialBalance}(owners, threshold
 | withdraw/claim | Uses .transfer | Uses safe .call |
 | Timelock | Implemented | Enhanced + tested |
 | Architecture | Monolithic | Modular + interfaces |
-| Testing | Basic | Comprehensive (12 tests) |
+| Testing | Basic | Comprehensive (8 tests) |
 
-## Acceptance Criteria Status
-
-✅ All listed critical fixes implemented and tested
-✅ All positive tests pass successfully
-✅ Project compiles cleanly (verified via forge build)
-✅ Modular architecture complete (7 modules + 3 interfaces)
-✅ Comprehensive README documenting all changes
 
 ## Foundry Documentation
 
