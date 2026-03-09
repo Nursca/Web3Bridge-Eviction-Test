@@ -40,7 +40,7 @@ contract EvictionVault is MultisigCore, PauseModule, MerkleAirdrop, IVault, IAir
         totalVaultValue = msg.value;
     }
 
-    // FIXED: Uses msg.sender instead of tx.origin
+    // FIXED: receive uses msg.sender instead of tx.origin
 
     receive() external payable {
         balances[msg.sender] += msg.value;
@@ -57,7 +57,7 @@ contract EvictionVault is MultisigCore, PauseModule, MerkleAirdrop, IVault, IAir
         emit Deposit(msg.sender, msg.value);
     }
 
-    // FIXED: Uses safe .call instead of .transfer to avoid gas issues
+    // FIXED: withdraw function uses safe .call instead of .transfer to avoid gas issues
 
     function withdraw(uint256 amount) external whenNotPaused {
         require(amount > 0, "invalid amount");
@@ -72,14 +72,14 @@ contract EvictionVault is MultisigCore, PauseModule, MerkleAirdrop, IVault, IAir
         emit Withdrawal(msg.sender, amount);
     }
 
-    // FIXED: Only callable via multisig transaction
+    // FIXED: setMerkleRoot callable by anyone, only callable via multisig transaction
 
     function setMerkleRoot(bytes32 root) external override {
         require(msg.sender == address(this), "only multisig");
         _setMerkleRoot(root);
     }
 
-    // FIXED: Uses safe .call instead of .transfer
+    // FIXED: claim function uses safe .call instead of .transfer
 
     function claim(bytes32[] calldata proof, uint256 amount) 
         external 
@@ -96,21 +96,21 @@ contract EvictionVault is MultisigCore, PauseModule, MerkleAirdrop, IVault, IAir
         require(success, "transfer failed");
     }
 
-    // FIXED: Only callable via multisig transaction
+    // FIXED: pause function single owner control, only callable via multisig transaction
 
     function pause() external {
         require(msg.sender == address(this), "only multisig");
         _pause();
     }
 
-    // FIXED: Only callable via multisig transaction
+    // FIXED: unpause function single owner control, only callable via multisig transaction
 
     function unpause() external {
         require(msg.sender == address(this), "only multisig");
         _unpause();
     }
 
-    // FIXED: Requires multisig approval and timelock, not callable by anyone
+    // FIXED: emergencyWithdrawAll public drain, requires multisig approval and timelock, not callable by anyone
  
     function emergencyWithdrawAll() external {
         require(msg.sender == address(this), "only multisig");
@@ -151,7 +151,6 @@ contract EvictionVault is MultisigCore, PauseModule, MerkleAirdrop, IVault, IAir
         submitTransaction(address(this), 0, data);
     }
 
-
     function getBalance(address user) external view override returns (uint256) {
         return balances[user];
     }
@@ -163,6 +162,4 @@ contract EvictionVault is MultisigCore, PauseModule, MerkleAirdrop, IVault, IAir
     function getTotalVaultValue() external view returns (uint256) {
         return totalVaultValue;
     }
-
-
 }
