@@ -1,0 +1,32 @@
+Compiling 35 files with Solc 0.8.33
+Solc 0.8.33 finished in 224.72ms
+Error: Compiler run failed:
+Warning (8429): Virtual modifiers are deprecated and scheduled for removal.
+  --> src/modules/MerkleAirdrop.sol:18:5:
+   |
+18 |     modifier onlyMerkleRootSetter() virtual;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Error (7576): Undeclared identifier.
+   --> src/EvictionVault.sol:147:9:
+    |
+147 |         submitTransaction(address(this), 0, data);
+    |         ^^^^^^^^^^^^^^^^^
+
+Error (7576): Undeclared identifier.
+   --> src/EvictionVault.sol:155:9:
+    |
+155 |         submitTransaction(address(this), 0, data);
+    |         ^^^^^^^^^^^^^^^^^
+
+Error (7576): Undeclared identifier.
+   --> src/EvictionVault.sol:163:9:
+    |
+163 |         submitTransaction(address(this), 0, data);
+    |         ^^^^^^^^^^^^^^^^^
+
+Error (7576): Undeclared identifier.
+   --> src/EvictionVault.sol:171:9:
+    |
+171 |         submitTransaction(address(this), 0, data);
+    |         ^^^^^^^^^^^^^^^^^
